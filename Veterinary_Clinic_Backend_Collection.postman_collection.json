@@ -1,0 +1,1200 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789abc",
+		"name": "🏥 Clínica Veterinaria - Backend Completo",
+		"description": "Colección completa para probar todos los microservicios del sistema de clínica veterinaria.\n\n## 🎯 Microservicios Incluidos:\n- 🔐 Auth Service (Puerto 8001)\n- 👥 Users Service (Puerto 8002)\n- 📅 Appointments Service (Puerto 8003)\n- 🏥 Medical Records Service (Puerto 8004)\n- 💊 Prescriptions Service (Puerto 8005)\n- 📊 Reports Service (Puerto 8006)\n\n## 🚀 Instrucciones de Uso:\n1. Importar esta colección en Postman\n2. Configurar el Environment (incluido)\n3. Ejecutar \"🔐 Login Admin\" para obtener token\n4. El token se guardará automáticamente para usar en otras requests\n\n## 🔑 Credenciales por Defecto:\n- **Admin:** admin@clinica.com / Admin123!\n- **Veterinario:** vet@clinica.com / Vet123!\n- **Recepcionista:** recep@clinica.com / Recep123!",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 1. AUTH SERVICE",
+			"item": [
+				{
+					"name": "🔑 Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('auth_token', response.access);",
+									"    pm.environment.set('refresh_token', response.refresh);",
+									"    console.log('✅ Token guardado automáticamente');",
+									"} else {",
+									"    console.log('❌ Error en login:', pm.response.text());",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@clinica.com\",\n    \"password\": \"Admin123!\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_url}}/api/v1/auth/login/",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "🔑 Login Veterinario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('vet_token', response.access);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"vet@clinica.com\",\n    \"password\": \"Vet123!\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_url}}/api/v1/auth/login/",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "✅ Verificar Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{auth_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_url}}/api/v1/auth/verify-token/",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"verify-token",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "👤 Registrar Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"nuevo@clinica.com\",\n    \"password\": \"Password123!\",\n    \"password_confirm\": \"Password123!\",\n    \"first_name\": \"Nuevo\",\n    \"last_name\": \"Usuario\",\n    \"role\": \"Recepcionista\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_url}}/api/v1/auth/register/",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "🔄 Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_url}}/api/v1/auth/refresh/",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 2. USERS SERVICE",
+			"item": [
+				{
+					"name": "📋 Propietarios",
+					"item": [
+						{
+							"name": "📝 Crear Propietario",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('owner_id', response.id);",
+											"    console.log('✅ Propietario creado con ID:', response.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Carlos\",\n    \"last_name\": \"Rodríguez\",\n    \"document_type\": \"CC\",\n    \"document_number\": \"12345678\",\n    \"email\": \"carlos@email.com\",\n    \"phone\": \"3001234567\",\n    \"address\": \"Calle 123 #45-67\",\n    \"city\": \"Bogotá\",\n    \"emergency_contact_name\": \"María Rodríguez\",\n    \"emergency_contact_phone\": \"3007654321\"\n}"
+								},
+								"url": {
+									"raw": "{{users_url}}/api/v1/owners/",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owners",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📖 Listar Propietarios",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{users_url}}/api/v1/owners/?page=1&page_size=10",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owners",
+										""
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "page_size",
+											"value": "10"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "👁️ Ver Propietario",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{users_url}}/api/v1/owners/{{owner_id}}/",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owners",
+										"{{owner_id}}",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "🔍 Buscar Propietarios",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{users_url}}/api/v1/owners/?search=Carlos",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"owners",
+										""
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "Carlos"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "🐕 Pacientes",
+					"item": [
+						{
+							"name": "🐶 Crear Paciente",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('patient_id', response.id);",
+											"    console.log('✅ Paciente creado con ID:', response.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Max\",\n    \"species\": \"Perro\",\n    \"breed\": \"Golden Retriever\",\n    \"birth_date\": \"2020-05-15\",\n    \"gender\": \"MACHO\",\n    \"weight\": 25.5,\n    \"color\": \"Dorado\",\n    \"microchip_number\": \"123456789012345\",\n    \"owner\": {{owner_id}},\n    \"is_sterilized\": false,\n    \"allergies\": \"Ninguna conocida\",\n    \"special_notes\": \"Muy amigable y activo\"\n}"
+								},
+								"url": {
+									"raw": "{{users_url}}/api/v1/patients/",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"patients",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📖 Listar Pacientes",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{users_url}}/api/v1/patients/",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"patients",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "👁️ Ver Paciente",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{users_url}}/api/v1/patients/{{patient_id}}/",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"patients",
+										"{{patient_id}}",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "💉 Agregar Vacuna",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"patient\": {{patient_id}},\n    \"vaccine_name\": \"Parvovirus\",\n    \"vaccine_brand\": \"Nobivac\",\n    \"batch_number\": \"VAC001\",\n    \"vaccination_date\": \"2024-01-15\",\n    \"next_vaccination_date\": \"2025-01-15\",\n    \"veterinarian_name\": \"Dr. Juan Pérez\",\n    \"notes\": \"Primera dosis anual\"\n}"
+								},
+								"url": {
+									"raw": "{{users_url}}/api/v1/vaccinations/",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"vaccinations",
+										""
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "📅 3. APPOINTMENTS SERVICE",
+			"item": [
+				{
+					"name": "📝 Crear Cita",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('appointment_id', response.id);",
+									"    console.log('✅ Cita creada con ID:', response.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"patient_id\": {{patient_id}},\n    \"owner_id\": {{owner_id}},\n    \"veterinarian_id\": 2,\n    \"appointment_date\": \"2024-12-20\",\n    \"appointment_time\": \"14:30:00\",\n    \"service_type\": \"CONSULTA_GENERAL\",\n    \"reason\": \"Revisión general de salud\",\n    \"notes\": \"Paciente muy activo, revisar peso\"\n}"
+						},
+						"url": {
+							"raw": "{{appointments_url}}/api/v1/appointments/",
+							"host": [
+								"{{appointments_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "📖 Listar Citas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{appointments_url}}/api/v1/appointments/",
+							"host": [
+								"{{appointments_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "📅 Agenda Diaria",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{appointments_url}}/api/v1/appointments/daily-schedule/?date=2024-12-20",
+							"host": [
+								"{{appointments_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								"daily-schedule",
+								""
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-12-20"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "✅ Confirmar Cita",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{appointments_url}}/api/v1/appointments/{{appointment_id}}/confirm/",
+							"host": [
+								"{{appointments_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								"{{appointment_id}}",
+								"confirm",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "🏁 Completar Cita",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"diagnosis\": \"Paciente en excelente estado de salud\",\n    \"treatment\": \"Continuar con rutina normal\",\n    \"next_appointment_date\": \"2025-06-20\"\n}"
+						},
+						"url": {
+							"raw": "{{appointments_url}}/api/v1/appointments/{{appointment_id}}/complete/",
+							"host": [
+								"{{appointments_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								"{{appointment_id}}",
+								"complete",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🏥 4. MEDICAL RECORDS SERVICE",
+			"item": [
+				{
+					"name": "📋 Historia Clínica",
+					"item": [
+						{
+							"name": "📝 Crear Historia Clínica",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('medical_record_id', response.id);",
+											"    console.log('✅ Historia clínica creada con ID:', response.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"patient_id\": {{patient_id}},\n    \"owner_id\": {{owner_id}},\n    \"medical_history\": \"Sin antecedentes médicos relevantes\",\n    \"allergies\": \"Ninguna conocida\",\n    \"chronic_conditions\": \"Ninguna\",\n    \"current_medications\": \"Ninguna\",\n    \"notes\": \"Paciente sano y activo\"\n}"
+								},
+								"url": {
+									"raw": "{{medical_records_url}}/api/v1/medical-records/",
+									"host": [
+										"{{medical_records_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"medical-records",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📖 Ver Historia Clínica",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{medical_records_url}}/api/v1/medical-records/{{medical_record_id}}/",
+									"host": [
+										"{{medical_records_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"medical-records",
+										"{{medical_record_id}}",
+										""
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "🩺 Consultas",
+					"item": [
+						{
+							"name": "📝 Crear Consulta",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('consultation_id', response.id);",
+											"    console.log('✅ Consulta creada con ID:', response.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"medical_record\": {{medical_record_id}},\n    \"veterinarian_id\": 2,\n    \"consultation_date\": \"2024-12-20T14:30:00Z\",\n    \"reason\": \"Consulta general\",\n    \"symptoms\": \"Ningún síntoma\",\n    \"diagnosis\": \"Animal sano\",\n    \"treatment\": \"Continuar cuidados normales\",\n    \"follow_up_date\": \"2025-06-20\",\n    \"vital_signs\": {\n        \"temperature\": 38.5,\n        \"heart_rate\": 80,\n        \"respiratory_rate\": 20,\n        \"weight\": 25.5\n    }\n}"
+								},
+								"url": {
+									"raw": "{{medical_records_url}}/api/v1/consultations/",
+									"host": [
+										"{{medical_records_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"consultations",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📖 Listar Consultas",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{medical_records_url}}/api/v1/consultations/",
+									"host": [
+										"{{medical_records_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"consultations",
+										""
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "💊 5. PRESCRIPTIONS SERVICE",
+			"item": [
+				{
+					"name": "🏪 Inventario",
+					"item": [
+						{
+							"name": "📝 Crear Medicamento",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('medication_id', response.id);",
+											"    console.log('✅ Medicamento creado con ID:', response.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Amoxicilina\",\n    \"generic_name\": \"Amoxicilina\",\n    \"active_ingredient\": \"Amoxicilina trihidratada\",\n    \"concentration\": \"500mg\",\n    \"medication_type\": \"ANTIBIOTICO\",\n    \"prescription_type\": \"CON_RECETA\",\n    \"manufacturer\": \"Laboratorio ABC\",\n    \"unit_price\": 2500.00,\n    \"current_stock\": 100,\n    \"minimum_stock\": 20,\n    \"expiration_date\": \"2025-12-31\",\n    \"requires_prescription\": true\n}"
+								},
+								"url": {
+									"raw": "{{prescriptions_url}}/api/v1/inventory/medications/",
+									"host": [
+										"{{prescriptions_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"inventory",
+										"medications",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📖 Listar Medicamentos",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{prescriptions_url}}/api/v1/inventory/medications/",
+									"host": [
+										"{{prescriptions_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"inventory",
+										"medications",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📊 Reporte de Inventario",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{prescriptions_url}}/api/v1/inventory/medications/inventory_report/",
+									"host": [
+										"{{prescriptions_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"inventory",
+										"medications",
+										"inventory_report",
+										""
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "💊 Recetas",
+					"item": [
+						{
+							"name": "📝 Crear Receta",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('prescription_id', response.id);",
+											"    console.log('✅ Receta creada con ID:', response.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"patient_id\": {{patient_id}},\n    \"owner_id\": {{owner_id}},\n    \"veterinarian_id\": 2,\n    \"consultation_id\": {{consultation_id}},\n    \"diagnosis\": \"Infección bacteriana\",\n    \"symptoms\": \"Fiebre y malestar\",\n    \"treatment_notes\": \"Tratamiento antibiótico por 7 días\",\n    \"follow_up_required\": true,\n    \"follow_up_date\": \"2024-12-27\",\n    \"items\": [\n        {\n            \"medication\": {{medication_id}},\n            \"quantity\": 14,\n            \"dosage\": \"1 cápsula cada 12 horas\",\n            \"duration_days\": 7,\n            \"instructions\": \"Tomar con alimento\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{prescriptions_url}}/api/v1/prescriptions/prescriptions/",
+									"host": [
+										"{{prescriptions_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"prescriptions",
+										"prescriptions",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📖 Listar Recetas",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{prescriptions_url}}/api/v1/prescriptions/prescriptions/",
+									"host": [
+										"{{prescriptions_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"prescriptions",
+										"prescriptions",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "✅ Emitir Receta",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{prescriptions_url}}/api/v1/prescriptions/prescriptions/{{prescription_id}}/issue/",
+									"host": [
+										"{{prescriptions_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"prescriptions",
+										"prescriptions",
+										"{{prescription_id}}",
+										"issue",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "📄 Descargar PDF",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{auth_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{prescriptions_url}}/api/v1/prescriptions/prescriptions/{{prescription_id}}/download_pdf/",
+									"host": [
+										"{{prescriptions_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"prescriptions",
+										"prescriptions",
+										"{{prescription_id}}",
+										"download_pdf",
+										""
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "📊 6. REPORTS SERVICE",
+			"item": [
+				{
+					"name": "📋 Plantillas de Reportes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{reports_url}}/api/v1/templates/",
+							"host": [
+								"{{reports_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"templates",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "🏃 Ejecutar Reporte",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"template\": 1,\n    \"name\": \"Reporte de Usuarios - Diciembre 2024\",\n    \"format_type\": \"PDF\",\n    \"parameters\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{reports_url}}/api/v1/executions/",
+							"host": [
+								"{{reports_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"executions",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "📖 Historial de Reportes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{reports_url}}/api/v1/executions/",
+							"host": [
+								"{{reports_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"executions",
+								""
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-refresh token si está cerca de expirar",
+					"const token = pm.environment.get('auth_token');",
+					"if (token) {",
+					"    try {",
+					"        const payload = JSON.parse(atob(token.split('.')[1]));",
+					"        const exp = payload.exp * 1000;",
+					"        const now = Date.now();",
+					"        const timeUntilExpiry = exp - now;",
+					"        ",
+					"        // Si el token expira en menos de 5 minutos, intentar renovar",
+					"        if (timeUntilExpiry < 300000) {",
+					"            console.log('🔄 Token próximo a expirar, considera renovarlo');",
+					"        }",
+					"    } catch (e) {",
+					"        console.log('⚠️ Error al verificar token:', e);",
+					"    }",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Logging global de respuestas",
+					"if (pm.response.code >= 400) {",
+					"    console.log('❌ Error en request:', pm.response.code, pm.response.status);",
+					"    console.log('Response:', pm.response.text());",
+					"} else {",
+					"    console.log('✅ Request exitoso:', pm.response.code, pm.response.status);",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_url",
+			"value": "http://localhost:8001",
+			"type": "string"
+		},
+		{
+			"key": "users_url",
+			"value": "http://localhost:8002",
+			"type": "string"
+		},
+		{
+			"key": "appointments_url",
+			"value": "http://localhost:8003",
+			"type": "string"
+		},
+		{
+			"key": "medical_records_url",
+			"value": "http://localhost:8004",
+			"type": "string"
+		},
+		{
+			"key": "prescriptions_url",
+			"value": "http://localhost:8005",
+			"type": "string"
+		},
+		{
+			"key": "reports_url",
+			"value": "http://localhost:8006",
+			"type": "string"
+		}
+	]
+} 
