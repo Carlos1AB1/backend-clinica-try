@@ -1,0 +1,1382 @@
+{
+	"info": {
+		"_postman_id": "vet-clinic-microservices-complete",
+		"name": "🏥 Veterinary Clinic - Complete Microservices Collection",
+		"description": "Colección completa para probar todos los microservicios del sistema de clínica veterinaria:\n\n🔐 Auth Service (Puerto 8001)\n👥 Users Service (Puerto 8002)\n📅 Appointments Service (Puerto 8003)\n📋 Medical Records Service (Puerto 8004)\n💊 Prescriptions Service (Puerto 8005)\n📊 Reports Service (Puerto 8006)\n\n**INSTRUCCIONES:**\n1. Configura las variables de entorno\n2. Ejecuta primero Login para obtener el token\n3. Prueba los endpoints en el orden sugerido",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Auth Service",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@clinica.com\",\n    \"password\": \"admin123456\",\n    \"first_name\": \"Dr. Juan\",\n    \"last_name\": \"Pérez\",\n    \"role\": \"ADMIN\",\n    \"phone\": \"+52 55 1234 5678\"\n}"
+						},
+						"url": {
+							"raw": "{{AUTH_BASE_URL}}/api/auth/register/",
+							"host": [
+								"{{AUTH_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('ACCESS_TOKEN', response.access);",
+									"    pm.environment.set('REFRESH_TOKEN', response.refresh);",
+									"    console.log('✅ Token guardado:', response.access);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@clinica.com\",\n    \"password\": \"admin123456\"\n}"
+						},
+						"url": {
+							"raw": "{{AUTH_BASE_URL}}/api/auth/login/",
+							"host": [
+								"{{AUTH_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{AUTH_BASE_URL}}/api/auth/profile/",
+							"host": [
+								"{{AUTH_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{REFRESH_TOKEN}}\"\n}"
+						},
+						"url": {
+							"raw": "{{AUTH_BASE_URL}}/api/auth/refresh/",
+							"host": [
+								"{{AUTH_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 Users Service",
+			"item": [
+				{
+					"name": "📋 Owners",
+					"item": [
+						{
+							"name": "Create Owner",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"María\",\n    \"last_name\": \"González\",\n    \"email\": \"maria@email.com\",\n    \"phone\": \"+52 55 9876 5432\",\n    \"address\": \"Av. Insurgentes 123, CDMX\",\n    \"identification_number\": \"CURP123456789\",\n    \"emergency_contact\": \"Juan González - 55 1111 2222\"\n}"
+								},
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/owners/",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"owners",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "List Owners",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/owners/",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"owners",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Owner by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/owners/1/",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"owners",
+										"1",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Owner",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"María Elena\",\n    \"last_name\": \"González\",\n    \"email\": \"maria.elena@email.com\",\n    \"phone\": \"+52 55 9876 5432\",\n    \"address\": \"Av. Insurgentes 123, CDMX\",\n    \"identification_number\": \"CURP123456789\",\n    \"emergency_contact\": \"Juan González - 55 1111 2222\"\n}"
+								},
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/owners/1/",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"owners",
+										"1",
+										""
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "🐕 Patients",
+					"item": [
+						{
+							"name": "Create Patient",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Max\",\n    \"species\": \"PERRO\",\n    \"breed\": \"Golden Retriever\",\n    \"date_of_birth\": \"2020-05-15\",\n    \"gender\": \"MACHO\",\n    \"weight\": 25.5,\n    \"color\": \"Dorado\",\n    \"microchip_number\": \"123456789012345\",\n    \"owner\": 1,\n    \"medical_notes\": \"Paciente activo y saludable\"\n}"
+								},
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/patients/",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"patients",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "List Patients",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/patients/?species=PERRO",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"patients",
+										""
+									],
+									"query": [
+										{
+											"key": "species",
+											"value": "PERRO"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Patient by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/patients/1/",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"patients",
+										"1",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Patient Weight",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"weight\": 26.0\n}"
+								},
+								"url": {
+									"raw": "{{USERS_BASE_URL}}/api/patients/1/",
+									"host": [
+										"{{USERS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"patients",
+										"1",
+										""
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "📅 Appointments Service",
+			"item": [
+				{
+					"name": "Create Appointment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"patient_id\": 1,\n    \"owner_id\": 1,\n    \"veterinarian_id\": 1,\n    \"appointment_date\": \"2024-01-15\",\n    \"appointment_time\": \"10:00:00\",\n    \"reason\": \"Consulta general\",\n    \"notes\": \"Primera consulta del año\",\n    \"appointment_type\": \"CONSULTA\",\n    \"estimated_duration\": 30\n}"
+						},
+						"url": {
+							"raw": "{{APPOINTMENTS_BASE_URL}}/api/appointments/",
+							"host": [
+								"{{APPOINTMENTS_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"appointments",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "List Appointments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{APPOINTMENTS_BASE_URL}}/api/appointments/?status=PROGRAMADA",
+							"host": [
+								"{{APPOINTMENTS_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"appointments",
+								""
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PROGRAMADA"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Appointment by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{APPOINTMENTS_BASE_URL}}/api/appointments/1/",
+							"host": [
+								"{{APPOINTMENTS_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"appointments",
+								"1",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Appointment Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"COMPLETADA\",\n    \"actual_start_time\": \"2024-01-15T10:00:00\",\n    \"actual_end_time\": \"2024-01-15T10:30:00\"\n}"
+						},
+						"url": {
+							"raw": "{{APPOINTMENTS_BASE_URL}}/api/appointments/1/",
+							"host": [
+								"{{APPOINTMENTS_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"appointments",
+								"1",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Available Time Slots",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{APPOINTMENTS_BASE_URL}}/api/appointments/available-slots/?date=2024-01-16&veterinarian_id=1",
+							"host": [
+								"{{APPOINTMENTS_BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"appointments",
+								"available-slots",
+								""
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2024-01-16"
+								},
+								{
+									"key": "veterinarian_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📋 Medical Records Service",
+			"item": [
+				{
+					"name": "🩺 Consultations",
+					"item": [
+						{
+							"name": "Create Consultation",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"patient_id\": 1,\n    \"veterinarian_id\": 1,\n    \"appointment_id\": 1,\n    \"reason_for_visit\": \"Consulta general y vacunación\",\n    \"symptoms\": \"Animal activo, sin síntomas aparentes\",\n    \"diagnosis\": \"Animal sano\",\n    \"treatment\": \"Aplicación de vacuna antirrábica\",\n    \"notes\": \"Próxima vacuna en 6 meses\",\n    \"weight\": 26.0,\n    \"temperature\": 38.5,\n    \"heart_rate\": 90,\n    \"respiratory_rate\": 25\n}"
+								},
+								"url": {
+									"raw": "{{MEDICAL_BASE_URL}}/api/consultations/",
+									"host": [
+										"{{MEDICAL_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"consultations",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "List Consultations",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{MEDICAL_BASE_URL}}/api/consultations/?patient_id=1",
+									"host": [
+										"{{MEDICAL_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"consultations",
+										""
+									],
+									"query": [
+										{
+											"key": "patient_id",
+											"value": "1"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Consultation by ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{MEDICAL_BASE_URL}}/api/consultations/1/",
+									"host": [
+										"{{MEDICAL_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"consultations",
+										"1",
+										""
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "💉 Vaccinations",
+					"item": [
+						{
+							"name": "Create Vaccination",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"patient_id\": 1,\n    \"veterinarian_id\": 1,\n    \"consultation\": 1,\n    \"vaccine_name\": \"Antirrábica\",\n    \"manufacturer\": \"Laboratorio Veterinario SA\",\n    \"batch_number\": \"VAC2024001\",\n    \"dose\": \"1 ml\",\n    \"administration_site\": \"Subcutánea en cuello\",\n    \"next_vaccination_date\": \"2024-07-15\",\n    \"notes\": \"Sin reacciones adversas\"\n}"
+								},
+								"url": {
+									"raw": "{{MEDICAL_BASE_URL}}/api/vaccinations/",
+									"host": [
+										"{{MEDICAL_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"vaccinations",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "List Vaccinations",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{MEDICAL_BASE_URL}}/api/vaccinations/?patient_id=1",
+									"host": [
+										"{{MEDICAL_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"vaccinations",
+										""
+									],
+									"query": [
+										{
+											"key": "patient_id",
+											"value": "1"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "🧪 Medical Tests",
+					"item": [
+						{
+							"name": "Create Medical Test",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"patient_id\": 1,\n    \"veterinarian_id\": 1,\n    \"consultation\": 1,\n    \"test_type\": \"HEMOGRAMA\",\n    \"test_name\": \"Hemograma completo\",\n    \"status\": \"PENDIENTE\",\n    \"requested_date\": \"2024-01-15\",\n    \"urgency\": \"NORMAL\",\n    \"sample_type\": \"Sangre\",\n    \"instructions\": \"Ayuno de 12 horas\"\n}"
+								},
+								"url": {
+									"raw": "{{MEDICAL_BASE_URL}}/api/medical-tests/",
+									"host": [
+										"{{MEDICAL_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"medical-tests",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Test Results",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"COMPLETADO\",\n    \"result_date\": \"2024-01-16\",\n    \"results\": \"Valores dentro de rangos normales\",\n    \"interpretation\": \"Sin alteraciones significativas\"\n}"
+								},
+								"url": {
+									"raw": "{{MEDICAL_BASE_URL}}/api/medical-tests/1/",
+									"host": [
+										"{{MEDICAL_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"medical-tests",
+										"1",
+										""
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "💊 Prescriptions Service",
+			"item": [
+				{
+					"name": "🏥 Inventory",
+					"item": [
+						{
+							"name": "Create Medication Category",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Antibióticos\",\n    \"description\": \"Medicamentos para combatir infecciones bacterianas\"\n}"
+								},
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/inventory/categories/",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"inventory",
+										"categories",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Create Medication",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Amoxicilina 500mg\",\n    \"category\": 1,\n    \"active_ingredient\": \"Amoxicilina\",\n    \"description\": \"Antibiótico de amplio espectro\",\n    \"presentation\": \"Comprimidos\",\n    \"concentration\": \"500mg\",\n    \"unit_price\": 25.50,\n    \"current_stock\": 100,\n    \"minimum_stock\": 10,\n    \"requires_prescription\": true,\n    \"is_controlled\": false\n}"
+								},
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/inventory/medications/",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"inventory",
+										"medications",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "List Medications",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/inventory/medications/?requires_prescription=true",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"inventory",
+										"medications",
+										""
+									],
+									"query": [
+										{
+											"key": "requires_prescription",
+											"value": "true"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Stock",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"medication\": 1,\n    \"movement_type\": \"ENTRADA\",\n    \"quantity\": 50,\n    \"reason\": \"Compra nueva\",\n    \"reference_document\": \"FAC-2024-001\"\n}"
+								},
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/inventory/movements/",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"inventory",
+										"movements",
+										""
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "📝 Prescriptions",
+					"item": [
+						{
+							"name": "Create Prescription",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"patient_id\": 1,\n    \"owner_id\": 1,\n    \"veterinarian_id\": 1,\n    \"consultation_id\": 1,\n    \"diagnosis\": \"Infección bacteriana leve\",\n    \"symptoms\": \"Letargo, falta de apetito\",\n    \"treatment_notes\": \"Tratamiento antibiótico por 7 días\",\n    \"expiration_date\": \"2024-02-15\",\n    \"veterinarian_license\": \"VET12345\",\n    \"special_instructions\": \"Administrar con comida\",\n    \"follow_up_required\": true,\n    \"follow_up_date\": \"2024-01-22\"\n}"
+								},
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/prescriptions/",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"prescriptions",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Add Medication to Prescription",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"prescription\": 1,\n    \"medication\": 1,\n    \"quantity_prescribed\": 14,\n    \"dosage\": \"1 comprimido\",\n    \"frequency\": \"Cada 12 horas\",\n    \"duration\": \"7 días\",\n    \"administration_route\": \"Vía oral\",\n    \"special_instructions\": \"Con comida\",\n    \"with_food\": true,\n    \"unit_price\": 25.50\n}"
+								},
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/prescription-items/",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"prescription-items",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "List Prescriptions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/prescriptions/?patient_id=1&status=EMITIDA",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"prescriptions",
+										""
+									],
+									"query": [
+										{
+											"key": "patient_id",
+											"value": "1"
+										},
+										{
+											"key": "status",
+											"value": "EMITIDA"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Issue Prescription",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"EMITIDA\"\n}"
+								},
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/prescriptions/1/",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"prescriptions",
+										"1",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Dispense Prescription",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"prescription\": 1,\n    \"dispensed_by\": 1,\n    \"received_by_name\": \"María González\",\n    \"received_by_document\": \"CURP123456789\",\n    \"notes\": \"Dispensación completa\",\n    \"items\": [\n        {\n            \"prescription_item\": 1,\n            \"quantity_dispensed\": 14,\n            \"unit_price\": 25.50,\n            \"batch_number\": \"LOTE2024001\",\n            \"expiration_date\": \"2025-12-31\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{PRESCRIPTIONS_BASE_URL}}/api/dispensations/",
+									"host": [
+										"{{PRESCRIPTIONS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"dispensations",
+										""
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "📊 Reports Service",
+			"item": [
+				{
+					"name": "📈 Dashboard",
+					"item": [
+						{
+							"name": "General Dashboard",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/dashboard/",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"dashboard",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Appointments Summary",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/appointments-summary/?start_date=2024-01-01&end_date=2024-01-31",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"appointments-summary",
+										""
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "2024-01-01"
+										},
+										{
+											"key": "end_date",
+											"value": "2024-01-31"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Revenue Report",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/revenue/?period=monthly&year=2024",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"revenue",
+										""
+									],
+									"query": [
+										{
+											"key": "period",
+											"value": "monthly"
+										},
+										{
+											"key": "year",
+											"value": "2024"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "📋 Medical Reports",
+					"item": [
+						{
+							"name": "Patient Medical History",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/patient-history/1/",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"patient-history",
+										"1",
+										""
+									]
+								}
+							}
+						},
+						{
+							"name": "Vaccination Schedule",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/vaccination-schedule/?upcoming_days=30",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"vaccination-schedule",
+										""
+									],
+									"query": [
+										{
+											"key": "upcoming_days",
+											"value": "30"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Prescription Report",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/prescriptions/?start_date=2024-01-01&end_date=2024-01-31&format=pdf",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"prescriptions",
+										""
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "2024-01-01"
+										},
+										{
+											"key": "end_date",
+											"value": "2024-01-31"
+										},
+										{
+											"key": "format",
+											"value": "pdf"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "📊 Analytics",
+					"item": [
+						{
+							"name": "Popular Treatments",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/popular-treatments/?period=monthly",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"popular-treatments",
+										""
+									],
+									"query": [
+										{
+											"key": "period",
+											"value": "monthly"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Inventory Low Stock",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{ACCESS_TOKEN}}"
+									}
+								],
+								"url": {
+									"raw": "{{REPORTS_BASE_URL}}/api/reports/low-stock/",
+									"host": [
+										"{{REPORTS_BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"reports",
+										"low-stock",
+										""
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "AUTH_BASE_URL",
+			"value": "http://localhost:8001",
+			"type": "string"
+		},
+		{
+			"key": "USERS_BASE_URL",
+			"value": "http://localhost:8002",
+			"type": "string"
+		},
+		{
+			"key": "APPOINTMENTS_BASE_URL",
+			"value": "http://localhost:8003",
+			"type": "string"
+		},
+		{
+			"key": "MEDICAL_BASE_URL",
+			"value": "http://localhost:8004",
+			"type": "string"
+		},
+		{
+			"key": "PRESCRIPTIONS_BASE_URL",
+			"value": "http://localhost:8005",
+			"type": "string"
+		},
+		{
+			"key": "REPORTS_BASE_URL",
+			"value": "http://localhost:8006",
+			"type": "string"
+		},
+		{
+			"key": "ACCESS_TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "REFRESH_TOKEN",
+			"value": "",
+			"type": "string"
+		}
+	]
+} 

@@ -17,6 +17,8 @@ echo "✅ Base de datos conectada"
 
 # Ejecutar migraciones
 echo "📋 Ejecutando migraciones..."
+python manage.py makemigrations inventory --noinput
+python manage.py makemigrations prescriptions --noinput  
 python manage.py makemigrations --noinput
 python manage.py migrate --noinput
 
@@ -51,14 +53,15 @@ if not Medication.objects.filter(name='Amoxicilina').exists():
         category=antibioticos,
         active_ingredient='Amoxicilina trihidratada',
         concentration='500mg',
-        medication_type='ANTIBIOTICO',
-        prescription_type='CON_RECETA',
+        medication_type='TABLET',
+        prescription_type='PRESCRIPTION',
         manufacturer='Laboratorio ABC',
         unit_price=2500.00,
         current_stock=100,
         minimum_stock=20,
         expiration_date='2025-12-31',
-        requires_prescription=True
+        requires_prescription=True,
+        created_by=1
     )
     print('✅ Medicamento de ejemplo creado: Amoxicilina')
 "
