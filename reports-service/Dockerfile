@@ -18,14 +18,14 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar requirements
-COPY ../requirements.txt .
+# Copiar requirements desde el directorio raíz
+COPY requirements.txt .
 
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar código fuente
-COPY . .
+# Copiar código fuente del reports-service
+COPY ./reports-service .
 
 # Crear directorio para archivos estáticos y media
 RUN mkdir -p staticfiles media
@@ -34,7 +34,7 @@ RUN mkdir -p staticfiles media
 EXPOSE 8000
 
 # Script de inicio
-COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+COPY ./reports-service/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 # Comando por defecto

@@ -23,9 +23,9 @@ python manage.py migrate --noinput
 # Crear superusuario si no existe
 echo "👤 Verificando superusuario..."
 python manage.py shell -c "
-from users.models import CustomUser
-if not CustomUser.objects.filter(email='admin@clinica.com').exists():
-    CustomUser.objects.create_superuser(
+from users.models import User
+if not User.objects.filter(email='admin@clinica.com').exists():
+    User.objects.create_superuser(
         email='admin@clinica.com',
         password='Admin123!',
         first_name='Admin',
@@ -40,11 +40,11 @@ else:
 # Crear usuarios de prueba
 echo "👥 Creando usuarios de prueba..."
 python manage.py shell -c "
-from users.models import CustomUser
+from users.models import User
 
 # Veterinario
-if not CustomUser.objects.filter(email='vet@clinica.com').exists():
-    CustomUser.objects.create_user(
+if not User.objects.filter(email='vet@clinica.com').exists():
+    User.objects.create_user(
         email='vet@clinica.com',
         password='Vet123!',
         first_name='Dr. Juan',
@@ -54,8 +54,8 @@ if not CustomUser.objects.filter(email='vet@clinica.com').exists():
     print('✅ Veterinario creado: vet@clinica.com / Vet123!')
 
 # Recepcionista
-if not CustomUser.objects.filter(email='recep@clinica.com').exists():
-    CustomUser.objects.create_user(
+if not User.objects.filter(email='recep@clinica.com').exists():
+    User.objects.create_user(
         email='recep@clinica.com',
         password='Recep123!',
         first_name='María',
