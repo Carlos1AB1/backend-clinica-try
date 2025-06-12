@@ -2,8 +2,7 @@
 	"info": {
 		"_postman_id": "vet-clinic-microservices-complete",
 		"name": "🏥 Veterinary Clinic - Complete Microservices Collection",
-		"description": "Colección completa para probar todos los microservicios del sistema de clínica veterinaria:\n\n🔐 Auth Service (Puerto 8001)\n👥 Users Service (Puerto 8002)\n📅 Appointments Service (Puerto 8003)\n📋 Medical Records Service (Puerto 8004)\n💊 Prescriptions Service (Puerto 8005)\n📊 Reports Service (Puerto 8006)\n\n**INSTRUCCIONES:**\n1. Configura las variables de entorno\n2. Ejecuta primero Login para obtener el token\n3. Prueba los endpoints en el orden sugerido",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"description": "Colección completa para probar todos los microservicios del sistema de clínica veterinaria:\n\n🔐 Auth Service (Puerto 8001)\n👥 Users Service (Puerto 8002)\n📅 Appointments Service (Puerto 8003)\n📋 Medical Records Service (Puerto 8004)\n💊 Prescriptions Service (Puerto 8005)\n📊 Reports Service (Puerto 8006)\n\n**INSTRUCCIONES:**\n1. Configura las variables de entorno\n2. Ejecuta primero Login para obtener el token\n3. Prueba los endpoints en el orden sugerido", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
